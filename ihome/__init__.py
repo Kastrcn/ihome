@@ -45,11 +45,11 @@ def create_app(config_name):
     csrf.init_app(app)
 
     global redis_store
-    redis_store = redis.StrictRedis(host=config_class.REDIS_HOST, port=config_class.REDIS_PORT)
+    redis_store = redis.StrictRedis(host=config_class.REDIS_HOST, port=config_class.REDIS_PORT, decode_responses=True)
 
     app.url_map.converters["re"] = ReConverter
-    from ihome import web_html
-    app.register_blueprint(web_html.html, url_prefix="/")
     from ihome import api_1_0
     app.register_blueprint(api_1_0.api, url_prefix="/api/v1.0")
+    from ihome import web_html
+    app.register_blueprint(web_html.html)
     return app
